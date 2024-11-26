@@ -1,19 +1,19 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import { Typography } from "@mui/material";
+import { CssBaseline } from "@mui/material";
+
+import reactLogo from "./assets/react.svg";
+import viteLogo from "/vite.svg";
+import "./App.css";
+import Home from "./pages/Home";
 
 function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      Chat Bot
-      <div>
-        <button>Hi there</button>
-      </div>
-    </>
-  )
+    return (
+        <>
+			<CssBaseline />
+            <Home/>
+        </>
+    );
 }
 
-export default App
+export default App;
