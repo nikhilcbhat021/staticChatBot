@@ -2,11 +2,12 @@ import React from "react";
 import { Rating } from "@mui/material";
 import { useState } from "react";
 
-const RatingForm = ({addRating}) => {
-    const [value, setValue] = useState(5);
+const RatingForm = ({addRating, readOnly, defaultValue}) => {
+    const [value, setValue] = useState(defaultValue);
     return (
         <Rating
-            sx={{alignSelf: 'center', fontSize: '2rem !important'}}
+            readOnly={readOnly}
+            sx={{alignSelf: 'center', fontSize: '16px !important'}}
             component="div"
             // size="large"
             name="simple-controlled"

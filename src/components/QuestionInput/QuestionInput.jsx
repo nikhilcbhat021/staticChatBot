@@ -23,6 +23,7 @@ const QuestionInput = memo(({askQuestion, save=undefined}) => {
                         onChange={(e) => {
                             setQuestion(e.target.value);
                         }}
+                        required
                         fullWidth
                         label="Ask me anything"
                         size="large"
@@ -35,7 +36,10 @@ const QuestionInput = memo(({askQuestion, save=undefined}) => {
                     <MainButton
                         variant="contained"
                         size="large"
-                        onClick={() => askQuestion(question)}
+                        onClick={() => {
+                            question && askQuestion(question);
+                            setQuestion("");
+                        }}
                     >
                         Ask
                     </MainButton>

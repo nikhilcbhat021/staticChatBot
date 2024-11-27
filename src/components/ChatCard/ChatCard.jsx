@@ -1,5 +1,5 @@
 import { Paper, Typography, IconButton, Stack, Avatar, Box } from "@mui/material";
-import { memo, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import ThumbUpOutlinedIcon from '@mui/icons-material/ThumbUpOutlined';
 import ThumbDownOutlinedIcon from '@mui/icons-material/ThumbDownOutlined';
 import styled from "@emotion/styled";
@@ -17,15 +17,21 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
 }));
 
 
-const ChatCard = memo(({ isAI, title, time, updateFeedbackRating, feedback="", rating="" }) => {
+const ChatCard = memo(({ isAI, title, time, updateFeedbackRating, feedback="", rating="", readOnly=false, bgColor="transparent" }) => {
 
     const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
     const [addRating, setAddRating] = useState(false);
 
+    useEffect(() => {
+        console.log(rating||0);
+    }, [])
     return (
         <Paper elevation={4} sx={{
             p:2,
             borderRadius: '20px',
+            bgcolor: bgColor,
+            boxShadow: `${readOnly ? 0 : 'var(--Paper-shadow)'}`,
+            flexGrow: '2'
         }}>
             <Stack gap={2} flexDirection={"row"}>
                 <StyledAvatar
@@ -34,6 +40,7 @@ const ChatCard = memo(({ isAI, title, time, updateFeedbackRating, feedback="", r
                 />
                 <Stack
                     justifyContent="flex-start"
+                    textAlign="start"
                     flexGrow="1"
                     gap={1}
                     my={1}
@@ -60,7 +67,7 @@ const ChatCard = memo(({ isAI, title, time, updateFeedbackRating, feedback="", r
                             {time}
                         </Typography>
 
-                        {isAI && 
+                        {isAI && !readOnly &&
                             <IconButton
                                 sx={{ml:'auto'}}
                                 onClick={() => {
@@ -71,7 +78,7 @@ const ChatCard = memo(({ isAI, title, time, updateFeedbackRating, feedback="", r
                                 <ThumbDownOutlinedIcon />
                             </IconButton>
                         }
-                        {isAI && 
+                        {isAI && !readOnly &&
                             <IconButton
                                 onClick={() => {
                                     console.log("thumbs up");
@@ -99,7 +106,7 @@ const ChatCard = memo(({ isAI, title, time, updateFeedbackRating, feedback="", r
                             lineHeight: '18.38px',
                             // textAlign:'center'
                         }}>Rating : </Typography>
-                        <RatingForm addRating={(ratingProvided) => updateFeedbackRating({'rating': ratingProvided})}/>
+                        <RatingForm readOnly={readOnly} defaultValue={rating || "0"} addRating={(ratingProvided) => updateFeedbackRating({'rating': ratingProvided})}/>
                     </Box>}
                 </Stack>
             </Stack>
@@ -110,7 +117,6 @@ const ChatCard = memo(({ isAI, title, time, updateFeedbackRating, feedback="", r
                     setFeedbackModalOpen(false)
                 }
             }/>
-            {/* {addRating && <RatingForm addRating={(ratingProvided) => updateFeedbackRating({'rating': ratingProvided})}/>} */}
         </Paper>
     );
 });

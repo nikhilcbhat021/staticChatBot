@@ -5,7 +5,7 @@ import ai_icon from "/ai_icon.svg";
 import { FaRegEdit } from "react-icons/fa";
 import CloseIcon from '@mui/icons-material/Close';
 
-const Navbar = ({setshowPastConversations}) => {
+const Navbar = ({setshowPastConversations, setConversing}) => {
     const [showMenu, setShowMenu] = useState(false);
 
     return (
@@ -44,7 +44,7 @@ const Navbar = ({setshowPastConversations}) => {
                             endIcon={
                                 <FaRegEdit height="24px" width="24px" color="black" />
                             }
-                            onClick={() => setshowPastConversations(false)}
+                            onClick={() => {setshowPastConversations(false); setConversing(false); setShowMenu(false)}}
                         >
                             <Typography color="black">New Chat</Typography>
                         </Button>
@@ -67,7 +67,7 @@ const Navbar = ({setshowPastConversations}) => {
                         height="100%"
                     >
                         <Button sx={{ p: 0, m: 1 }}
-                            onClick={() => setshowPastConversations(true)}
+                            onClick={() => {setshowPastConversations(true); setShowMenu(false)}}
                         >
                             <Typography
                                 variant="div"

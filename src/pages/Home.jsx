@@ -53,7 +53,7 @@ const Home = () => {
                 position:'relative',
             }}
         >
-            <Navbar setshowPastConversations={setShowPastConversations}/>
+            <Navbar setshowPastConversations={setShowPastConversations} setConversing={setConversing}/>
             <Container
                 maxWidth="xl"
                 component="main"
@@ -67,14 +67,18 @@ const Home = () => {
                     },
                 }}
             >
-                <Typography variant="h1" color="primary.900" p={1.5} mb={6} textAlign="start">
+                <Typography variant="h1" color="primary.900" p={1.5} mb={6} textAlign="start" onClick={() => setShowPastConversations(false)} sx={{
+                    ':hover': {
+                        cursor: 'pointer'
+                    }
+                }}>
                     Bot AI
                 </Typography>
 
                 { !showPastConversations ? 
                     (<Stack
-                        m={2}
                         gap={6}
+                        m={2}
                         pr={{xxs:6 , md:0}}
                         direction="column"
                         flexGrow="1"
@@ -86,7 +90,7 @@ const Home = () => {
                             </>) : (
                                 <Conversation addConversation={(conv) => {
                                     console.error(conv);
-                                    setAllConversations(c => [...c, conv]);
+                                    setAllConversations(c => [conv, ...c]);
                                     setConversing(false);
                                 }} initialQuestion={question} />
                             )

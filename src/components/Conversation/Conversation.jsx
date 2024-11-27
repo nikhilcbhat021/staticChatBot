@@ -1,4 +1,4 @@
-import { Typography, Container, Stack, TextField, Grid2 } from "@mui/material";
+import { Typography, Container, Stack, TextField, Grid2, Box } from "@mui/material";
 import { memo, useCallback, useEffect, useState } from "react";
 
 import sampleData from '../../assets/sampleData.json';
@@ -22,7 +22,6 @@ const fetchAns = async (question) => {
 
 const Conversation = memo(({addConversation, initialQuestion}) => {
 
-    const [queAnsPair, setQueAnsPair] = useState({});
     const [question, setQuestion] = useState({'title': initialQuestion, 'time': new Date().toLocaleTimeString("en-IN")});
     const [currConv, setCurrConv] = useState({'time': new Date().toLocaleDateString("en-IN"), 'chats': []}); // an array of {queAnsPair}
 
@@ -62,23 +61,16 @@ const Conversation = memo(({addConversation, initialQuestion}) => {
 
     useEffect(() => {
         // create the question card...
+        console.log("initial question - ", initialQuestion, " ", question);
         (async() => {
             const title = await fetchAns(question);
             const answer = {
                 'id': crypto.randomUUID(),
                 'title': title.response, 'time': new Date().toLocaleTimeString("en-IN"), 'rating': '', 'feedback': ''
             }
-            setQueAnsPair({'question': question, 'answer': answer});
+            setCurrConv(c => ({...c, 'chats':[...c['chats'], {'question': question, 'answer': answer}]}));
         })()
     }, [question])
-
-    useEffect(() => {
-        // create the answer card...
-        console.error(queAnsPair);
-        if (Object.hasOwn(queAnsPair, 'answer') && Object.hasOwn(queAnsPair, 'question') ) {
-            setCurrConv(c => ({...c, 'chats':[...c['chats'], queAnsPair]}));
-        }
-    }, [queAnsPair])
 
     useEffect(() => {
         console.error(currConv);
@@ -111,23 +103,36 @@ const Conversation = memo(({addConversation, initialQuestion}) => {
                 >
                     {currConv.chats.map((pair, idx) => {
                         return (
-                            <div style={{display:"flex", gap:'8px', flexDirection:'column'}} key={pair.answer.id}>
-
+                            <Box sx={{
+                                display:"flex", 
+                                gap:'8px', 
+                                flexDirection:'column', 
+                                ":first-child": {
+                                    // bgcolor: 'rgba(215, 199, 244, 0.13)',
+                                    borderRadius: '20px',
+                                },
+                                ":last-child": {
+                                    // bgcolor: 'rgba(215, 199, 244, 0.13)',
+                                    borderRadius: '20px',
+                                }
+                            }} key={pair.answer.id}>
                                 <ChatCard
+                                    bgcolor='rgba(215, 199, 244, 0.13)'
                                     updateFeedbackRating={({rating, feedback}) => updateUserExperience(pair.answer.id, rating, feedback)}
-                                    isAI={false} title={pair.question.title} time={pair.question.time} 
+                                    isAI={false} title={pair.question.title} time={pair.question.time}
                                 />
 
                                 <ChatCard
+                                    bgcolor='rgba(215, 199, 244, 0.13)'
                                     updateFeedbackRating={({rating, feedback}) => updateUserExperience(pair.answer.id, rating, feedback)}
                                     isAI={true} title={pair.answer.title} time={pair.answer.time} 
                                     rating={pair.answer.rating} feedback={pair.answer.feedback}
                                 />
-                            </div>
+                            </Box>
                         )
                     })}
                 </Stack>
-                <QuestionInput askQuestion={(q) => askQuestion(q)} save={() => addConversation(currConv)} />
+                <QuestionInput askQuestion={askQuestion} save={() => addConversation(currConv)} />
             </Stack>
         </Container>
     );
